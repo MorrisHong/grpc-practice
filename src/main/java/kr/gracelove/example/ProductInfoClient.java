@@ -5,12 +5,17 @@ import example.ProductInfoOuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.logging.Logger;
+
 /**
  * @author : Eunmo Hong
  * @since : 2020/09/13
  */
 
 public class ProductInfoClient {
+
+	private static final Logger log = Logger.getLogger(ProductInfoClient.class.getName());
+
 	public static void main(String[] args) {
 		ManagedChannel channel = ManagedChannelBuilder
 				.forAddress("localhost", 50051)
@@ -27,10 +32,10 @@ public class ProductInfoClient {
 						.setPrice(1000.0f)
 						.build()
 		);
-		System.out.println(productID.getValue());
+		log.info(productID.getValue());
 
 		ProductInfoOuterClass.Product product = stub.getProduct(productID);
-		System.out.println(product.toString());
+		log.info(product.toString());
 		channel.shutdown();
 	}
 }
