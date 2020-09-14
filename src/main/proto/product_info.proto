@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package example;
+import "google/protobuf/wrappers.proto";
+
+package kr.gracelove.example.productinfo;
 
 service ProductInfo {
   rpc addProduct(Product) returns (ProductID);

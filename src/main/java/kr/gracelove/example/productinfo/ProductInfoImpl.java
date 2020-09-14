@@ -1,10 +1,7 @@
-package kr.gracelove.example;
+package kr.gracelove.example.productinfo;
 
-import example.ProductInfoGrpc;
-import example.ProductInfoOuterClass;
 import io.grpc.Status;
 import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,26 +17,26 @@ public class ProductInfoImpl extends ProductInfoGrpc.ProductInfoImplBase {
 	private Map<String, ProductInfoOuterClass.Product> productMap = new HashMap<>();
 
 	@Override
-	public void addProduct(ProductInfoOuterClass.Product request, StreamObserver<ProductInfoOuterClass.ProductID> responseObserver) {
+	public void addProduct(ProductInfoOuterClass.Product request,
+	                       io.grpc.stub.StreamObserver<ProductInfoOuterClass.ProductID> responseObserver) {
 		UUID uuid = UUID.randomUUID();
 		String randomUUIDString = uuid.toString();
-
+		request = request.toBuilder().setId(randomUUIDString).build();
 		productMap.put(randomUUIDString, request);
-
-		ProductInfoOuterClass.ProductID id = ProductInfoOuterClass.ProductID.newBuilder()
-				.setValue(randomUUIDString).build();
-
+		ProductInfoOuterClass.ProductID id
+				= ProductInfoOuterClass.ProductID.newBuilder().setValue(randomUUIDString).build();
 		responseObserver.onNext(id);
 		responseObserver.onCompleted();
 	}
 
 	@Override
-	public void getProduct(ProductInfoOuterClass.ProductID request, StreamObserver<ProductInfoOuterClass.Product> responseObserver) {
+	public void getProduct(ProductInfoOuterClass.ProductID request,
+	                       io.grpc.stub.StreamObserver<ProductInfoOuterClass.Product> responseObserver) {
 		String id = request.getValue();
 		if (productMap.containsKey(id)) {
 			responseObserver.onNext(productMap.get(id));
 			responseObserver.onCompleted();
-		}else {
+		} else {
 			responseObserver.onError(new StatusException(Status.NOT_FOUND));
 		}
 	}
