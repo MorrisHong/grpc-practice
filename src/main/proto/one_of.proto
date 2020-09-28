@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.chequer.querypie.rpc.common.workspace";
+option java_outer_classname = "WorkspaceProto";
+option csharp_namespace = "QueryPie.Proto";
+
+
+package common.workspace;
+
+
+
+message WorkspaceInfo {
+  string uuid = 1;
+  string name = 2;
+  oneof gitType {
+    GitInfo gitSsh = 3;
+    GitInfo gitHttps = 4;
+  }
+}
+
+message GitInfo {
+  string url = 1;
+  oneof credential {
+    GitUserPass userPass = 2;
+    GitSshKey sshKey = 3;
+  }
+}
+
+message GitUserPass {
+  string username = 1;
+  string password = 2;
+}
+
+message GitSshKey {
+  string username = 1;
+  string publickey = 2;
+  string privatekey = 3;
+  string passphrase = 4;
+}
